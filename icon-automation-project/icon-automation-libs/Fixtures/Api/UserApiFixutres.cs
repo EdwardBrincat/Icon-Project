@@ -52,31 +52,22 @@ public class UserApiFixutres : FixtureBase
         userResult.Page.Should().Be(page);
         userResult.PageSize.Should().Be(expectedResult.PageSize);
 
-        var user = userResult.Data.FirstOrDefault(user => user.Id == expectedResult.User.Id);
+        if(page <= 2)
+        {
+            var user = userResult.Data.FirstOrDefault(user => user.Id == expectedResult.User.Id);
 
-        user.Should().NotBeNull();
-        user.Email.Should().Be(expectedResult.User.Email);
-        user.FirstName.Should().Be(expectedResult.User.FirstName);
-        user.LastName.Should().Be(expectedResult.User.LastName);
-        user.Avatar.Should().Be(expectedResult.User.Avatar);
+            user.Should().NotBeNull();
+            user.Email.Should().Be(expectedResult.User.Email);
+            user.FirstName.Should().Be(expectedResult.User.FirstName);
+            user.LastName.Should().Be(expectedResult.User.LastName);
+            user.Avatar.Should().Be(expectedResult.User.Avatar);
+        }
+        else        
+            userResult.Data.Should().BeEmpty();
+        
+
         userResult.Support.Should().NotBeNull();
         userResult.Support.Text.Should().Be(expectedResult.Support.Text);
         userResult.Support.Url.Should().Be(expectedResult.Support.Url);
-    }
-
-    public void The_get_user_response_is_verified_for_a_non_existent_page(string scenarioId, int page)
-    {
-        var userResult = ScenarioContext.GetValue<UsersResult>($"{UserClientKeys.UsersResult}");
-        var expectedResult = _config.TestData[scenarioId];
-
-        userResult.ResponseCode.Should().Be(HttpStatusCode.OK);
-
-        userResult.Page.Should().Be(page);
-        userResult.PageSize.Should().Be(expectedResult.PageSize);
-
-        userResult.Data.Should().BeEmpty();
-        userResult.Support.Should().NotBeNull();
-        userResult.Support.Text.Should().Be(expectedResult.Support.Text);
-        userResult.Support.Url.Should().Be(expectedResult.Support.Url);
-    }
+    }    
 }

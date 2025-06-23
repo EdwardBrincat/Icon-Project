@@ -27,9 +27,7 @@ public class UserFeature : FeatureFixture
         await Runner.WithContext<ApiContext>()            
             .AddAsyncSteps(
                 given => given.UserApiFixutres.A_get_user_action_is_requested(page))
-            .OnConditionSteps(() => int.Parse(testId) < 3,
-                when => when.UserApiFixutres.The_get_user_response_is_verified($"scenario_{testId}_page_{page}", page))
-            .OnConditionSteps(() => int.Parse(testId) > 2,
-                when => when.UserApiFixutres.The_get_user_response_is_verified_for_a_non_existent_page($"scenario_{testId}_page_{page}", page))
+            .AddSteps(
+                then => then.UserApiFixutres.The_get_user_response_is_verified($"scenario_{testId}_page_{page}", page))
             .RunAsync();
 }
