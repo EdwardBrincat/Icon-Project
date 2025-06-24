@@ -19,15 +19,15 @@ public class UserFeature : FeatureFixture
 {
     private readonly RunnerContext _runnerContext = new();
 
-    [IconScenario("Scenario-1", FeatureConst.API.User)]
+    [IconScenario("Scenario-API-1", FeatureConst.API.User)]
     [TestCase("01", 1 )]
     [TestCase("02", 2)]
     [TestCase("03", 12)]
-    public async Task Scenario_001_TESTID(string testId, int page) =>
-        await Runner.WithContext<ApiContext>()            
+    public async Task Scenario_Api_001_TESTID(string testId, int page) 
+        => await Runner.WithContext<ApiContext>()            
             .AddAsyncSteps(
                 given => given.UserApiFixutres.A_get_user_action_is_requested(page))
             .AddSteps(
-                then => then.UserApiFixutres.The_get_user_response_is_verified($"scenario_{testId}_page_{page}", page))
+                then => then.UserApiFixutres.The_get_user_response_is_verified($"scenario_api_{testId}_page_{page}", page))
             .RunAsync();
 }

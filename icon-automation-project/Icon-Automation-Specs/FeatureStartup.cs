@@ -7,6 +7,7 @@ using LightBDD.Core.Configuration;
 using LightBDD.NUnit3;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using OpenQA.Selenium;
 
 [assembly: Parallelizable(ParallelScope.Fixtures)]
 [assembly: ConfiguredLightBddScope]
@@ -28,11 +29,14 @@ internal class ConfiguredLightBddScopeAttribute : LightBddScopeAttribute
             .AddMappingProfiles());
 
         _startup.ConfigureServiceCollections(services => services
-            .AddApiContext()
+            .AddContext()
             .AddFluentlyHttpClient()
             .AddUserClientCollection()
             .AddUserServiceCollection()
             .AddUserCommandsCollection()
+            .AddPageObjects()
+            .AddUiFixtures()
+            .AddWebDriverClient(ScreenOrientation.Landscape)
             .AddSingleton(provider => mapperConfig.CreateMapper(provider.GetService)));
 
         _startup.ConfigureServiceProviders(provider => provider

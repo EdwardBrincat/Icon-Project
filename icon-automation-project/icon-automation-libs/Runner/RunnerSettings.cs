@@ -4,4 +4,5 @@ public class RunnerSettings
 {
 	public  string Environment { get; set; }
 	public bool IsHeadless { get; set; }
+    public string OperatingSystem { get; }
 }

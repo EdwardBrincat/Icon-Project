@@ -19,7 +19,7 @@ public static class ClientHttpExtensions
         var fluentHttpAuthClientFactory = services.GetRequiredService<IFluentHttpClientFactory>();
         fluentHttpAuthClientFactory.CreateBuilder(Identifier)
             .WithMessageHandler(new HttpClientHandler { ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true })
-            .WithBaseUrl(config.Url)
+            .WithBaseUrl(config.ApiUrl)
             .WithUserAgent(Identifier)
             .WithTimeout(config.Timeout)
             .UseTimer()

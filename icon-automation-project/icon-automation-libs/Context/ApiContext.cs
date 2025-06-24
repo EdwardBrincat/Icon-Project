@@ -5,12 +5,12 @@ namespace Icon_Automation_Specs.Context;
 
 public class ApiContext : ContextBase
 {
-    public UserApiFixutres UserApiFixutres { get; }
+    public UserApiFixture UserApiFixutres { get; }
 
 
 	public ApiContext(
         IScenarioContext scenarioContext,
-        UserApiFixutres userApiFixutres
+        UserApiFixture userApiFixutres
     ) : base(scenarioContext)
     {
         UserApiFixutres = userApiFixutres;

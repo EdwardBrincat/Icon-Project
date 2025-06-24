@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+	
+	<TestRunParameters>
+		<Parameter name="env" value="prod" />
+		<Parameter name="os" value="windows" />		
+		<Parameter name="isHeadless" value="false" />
+	</TestRunParameters>
+</RunSettings>

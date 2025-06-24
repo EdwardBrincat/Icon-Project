@@ -4,12 +4,14 @@ namespace Icon_Automation_Libs.Config.Model;
 
 public class ConfigModel
 {
-    public string Url { get; set; }
+    public string ApiUrl { get; set; }
+    public string UiBaseUrl { get; set; }
     public int Timeout { get; set; }
 
     public int Retries { get; set; }
     public string apiKey { get; set; } 
-    public Dictionary<string, UserTestData> TestData { get; set; }
+    public Dictionary<string, UserTestData> TestDataApi { get; set; }
+    public Dictionary<string, EverNoteTestData> TestDataUi { get; set; }
 }
 
 public class UserTestData
@@ -20,5 +22,13 @@ public class UserTestData
     public int TotalPages { get; set; }
     public UserDetails User { get; set; }
     public SupportDetails Support { get; set; }
+}
+
+public class EverNoteTestData
+{
+    public string Email { get; set; }
+    public string CorrectPassword { get; set; }
+    public string InCorrectPassword { get; set; }
+    public string ErrorMessage { get; set; }
 }
 

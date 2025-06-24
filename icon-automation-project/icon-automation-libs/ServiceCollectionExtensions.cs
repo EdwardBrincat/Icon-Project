@@ -4,10 +4,17 @@ using Icon_Automation_Libs.Clients.User;
 using Icon_Automation_Libs.Config.Model;
 using Icon_Automation_Libs.DependencyInjection;
 using Icon_Automation_Libs.Fixtures.Api;
+using Icon_Automation_Libs.Fixtures.UI;
+using Icon_Automation_Libs.PageObjects.Login;
+using Icon_Automation_Libs.PageObjects.Navigation;
 using Icon_Automation_Libs.Scenario;
 using Icon_Automation_Libs.Services.User;
+using Icon_Automation_Libs.WebDriver;
+using Icon_Automation_Libs.WebDriver.BrowserConfigurations;
+using Icon_Automation_Libs.WebDriver.Selenium;
 using Icon_Automation_Specs.Context;
 using Microsoft.Extensions.DependencyInjection;
+using OpenQA.Selenium;
 
 namespace Icon_Automation_Libs;
 
@@ -48,16 +55,44 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddApiFixtures(this IServiceCollection services)
     {
-        services.AddScoped<UserApiFixutres>();
+        services.AddScoped<UserApiFixture>();
 
         return services;
     }
 
-    public static IServiceCollection AddApiContext(this IServiceCollection services)
+    public static IServiceCollection AddContext(this IServiceCollection services)
     {
         services.AddApiFixtures();
+        services.AddUiFixtures();
         services.AddScoped<ApiContext>();
+        services.AddScoped<UiContext>();
 
+        return services;
+    }
+
+    public static IServiceCollection AddWebDriverClient(this IServiceCollection services, ScreenOrientation screenOrientation)
+    {
+        services.AddScoped<IDriverClient, WebDriverClient>(); ;
+        services.AddScoped(p => p.GetRequiredService<WebDriverClientFactory>().Create(ScreenOrientation.Portrait));       
+        services.AddScoped<WebDriverBrowserConfigurations>();
+        services.AddScoped<WebDriverClientFactory>();
+        services.AddScoped<WebDriver.WebElementFactory>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddPageObjects(this IServiceCollection services)
+    {
+        services.AddScoped<LoginPage>();
+        services.AddScoped<NavigationPage>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddUiFixtures(this IServiceCollection services)
+    {
+        services.AddScoped<LoginUiFixture>();
+        services.AddScoped<NavigationUiFixture>();
         return services;
     }
 }
