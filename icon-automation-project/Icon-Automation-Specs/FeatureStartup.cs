@@ -32,15 +32,19 @@ internal class ConfiguredLightBddScopeAttribute : LightBddScopeAttribute
             .AddContext()
             .AddFluentlyHttpClient()
             .AddUserClientCollection()
+            .AddWeatherStackClientCollection()
             .AddUserServiceCollection()
+            .AddWeatherStackServiceCollection()
             .AddUserCommandsCollection()
+            .AddWeatherStackCommandsCollection()
             .AddPageObjects()
             .AddUiFixtures()
             .AddWebDriverClient(ScreenOrientation.Landscape)
             .AddSingleton(provider => mapperConfig.CreateMapper(provider.GetService)));
 
         _startup.ConfigureServiceProviders(provider => provider
-            .ConfigureUserClient());
+            .ConfigureUserClient()
+            .ConfigureWeatherstackClient());
 
         _startup.Configure(configuration);
     }

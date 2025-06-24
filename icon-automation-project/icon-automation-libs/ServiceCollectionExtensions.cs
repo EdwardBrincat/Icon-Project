@@ -1,6 +1,8 @@
 ﻿using Icon_Automation_Libs.Account;
 using Icon_Automation_Libs.ActionContext.Factory;
 using Icon_Automation_Libs.Clients.User;
+using Icon_Automation_Libs.Clients.WeatherStack;
+using Icon_Automation_Libs.Command;
 using Icon_Automation_Libs.Config.Model;
 using Icon_Automation_Libs.DependencyInjection;
 using Icon_Automation_Libs.Fixtures.Api;
@@ -9,6 +11,7 @@ using Icon_Automation_Libs.PageObjects.Login;
 using Icon_Automation_Libs.PageObjects.Navigation;
 using Icon_Automation_Libs.Scenario;
 using Icon_Automation_Libs.Services.User;
+using Icon_Automation_Libs.Services.WeatherStack;
 using Icon_Automation_Libs.WebDriver;
 using Icon_Automation_Libs.WebDriver.BrowserConfigurations;
 using Icon_Automation_Libs.WebDriver.Selenium;
@@ -56,6 +59,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApiFixtures(this IServiceCollection services)
     {
         services.AddScoped<UserApiFixture>();
+        services.AddScoped<WeatherStackApiFixture>();
 
         return services;
     }
@@ -93,6 +97,24 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<LoginUiFixture>();
         services.AddScoped<NavigationUiFixture>();
+        return services;
+    }
+
+    public static IServiceCollection AddWeatherStackClientCollection(this IServiceCollection services)
+    {
+        services.AddScoped<IWeatherStackClient, WeatherStackClient>();
+        return services;
+    }
+
+    public static IServiceCollection AddWeatherStackServiceCollection(this IServiceCollection services)
+    {
+        services.AddScoped<IWeatherStackCurrentService, WeatherStackCurrentService>();
+        return services;
+    }
+
+    public static IServiceCollection AddWeatherStackCommandsCollection(this IServiceCollection services)
+    {
+        services.AddSingleton<WeatherStackCommandFactory>();
         return services;
     }
 }

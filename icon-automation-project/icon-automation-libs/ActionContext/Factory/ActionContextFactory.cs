@@ -5,7 +5,8 @@ namespace Icon_Automation_Libs.ActionContext.Factory;
 
 public interface IActionContextFactory
 {
-    UserActionContextBuilder CreateUserActionContext();    
+    UserActionContextBuilder CreateUserActionContext();
+    WeatherStackActionContextBuilder CreateWeatherStackActionContextBuilder();
 }
 
 public class ActionContextFactory : IActionContextFactory
@@ -18,4 +19,6 @@ public class ActionContextFactory : IActionContextFactory
     }
 
     public UserActionContextBuilder CreateUserActionContext() => _instanceCreator.Create<UserActionContextBuilder>();
+
+    public WeatherStackActionContextBuilder CreateWeatherStackActionContextBuilder() => _instanceCreator.Create<WeatherStackActionContextBuilder>();
 }
