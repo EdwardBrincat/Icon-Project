@@ -80,5 +80,7 @@ public class InputComponent : IComponent
 		}
 
 		return this;
-	}	
+	}
+
+    public string GetValue() => _driver.WaitForElementToBeVisible(_inputField).GetAttribute(_inputField, "value");
 }

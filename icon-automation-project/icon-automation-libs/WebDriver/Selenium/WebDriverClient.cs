@@ -1,22 +1,18 @@
-﻿using AngleSharp.Dom;
-using AngleSharp.Html.Parser;
+﻿using Elastic.Clients.Elasticsearch.IndexLifecycleManagement;
 using Icon_Automation_Libs.Config.Model;
 using Icon_Automation_Libs.Exceptions;
 using Icon_Automation_Libs.Runner;
 using LightBDD.Framework;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.Extensions;
-using OpenQA.Selenium.Support.UI;
 using Polly;
 using Polly.Retry;
-using Sketch7.Core;
-using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Text;
 using System.Text.RegularExpressions;
-using SeleniumCookie = OpenQA.Selenium.Cookie;
+
 
 namespace Icon_Automation_Libs.WebDriver.Selenium;
 
@@ -26,7 +22,8 @@ public class WebDriverClient : IDisposable, IDriverClient
 	private readonly RetryPolicy _retryPolicy;
 	private readonly RetryPolicy _retryPolicyNullReference;	
 	private readonly RunnerContext _runnerContext;
-	private readonly WebElementFactory _factory;
+    private readonly ConfigModel _config;
+    private readonly WebElementFactory _factory;
 
 
 	public WebDriverClient(
@@ -40,7 +37,8 @@ public class WebDriverClient : IDisposable, IDriverClient
 		
 		
 		_runnerContext = runnerContext;
-		_factory = factory;
+        _config = config;
+        _factory = factory;
 
 		_retryPolicy = Policy
 			.Handle<WebDriverException>()
@@ -76,19 +74,89 @@ public class WebDriverClient : IDisposable, IDriverClient
 	public T GetInstance<T>() => (T)Driver;
 
 
-	public Task Open(string url)
+	public async Task Open(string url)
 	{
 		try
 		{
-            Driver.Navigate().GoToUrl(url);
+			Driver.Navigate().GoToUrl(url);
 			WaitForPageToLoad();
-            return Task.CompletedTask;
-		}
+
+			if (_runnerContext.BypassCatpcha)
+			{
+				string token = await SolveCaptcha(_config.AntiCaptacha.ApiKey, _config.AntiCaptacha.SiteKey, url);
+				Console.WriteLine("Solved Token: " + token);
+
+				IWebElement captchaTextarea = Driver.FindElement(By.Name("h-captcha-response"));
+
+				((IJavaScriptExecutor)Driver).ExecuteScript(@"
+					arguments[0].value = arguments[1];
+					arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+					arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+				", captchaTextarea, token);
+
+				Thread.Sleep(1000);
+				string currentValue = captchaTextarea.GetAttribute("value"); 
+				Console.WriteLine("Injected token is now: " + currentValue);
+			}
+        }
 		catch (WebDriverException e)
 		{			
 			throw HandleFailureException($"Failed to open url[{url}] due to [{e.Message}]");
 		}
 	}
+
+    private async Task<string> SolveCaptcha(string apikey, string siteKey, string url)
+    {
+        using var client = new HttpClient();
+        
+        var taskRequest = new
+        {
+            clientKey = apikey,
+            task = new
+            {
+                type = "HCaptchaTaskProxyless",
+                websiteURL = url,
+                websiteKey = siteKey
+            }
+        };
+
+        var createResponse = await client.PostAsync(
+            "https://api.anti-captcha.com/createTask",
+            new StringContent(JObject.FromObject(taskRequest).ToString(), Encoding.UTF8, "application/json"));
+
+        var createResult = JObject.Parse(await createResponse.Content.ReadAsStringAsync());
+
+        if ((int)createResult["errorId"] != 0)
+            throw new Exception("Task creation error: " + createResult["errorDescription"]);
+
+        var taskId = (int)createResult["taskId"];
+        Console.WriteLine("Task ID: " + taskId);
+		        
+        JObject result;
+        do
+        {
+            await Task.Delay(5000); 
+
+            var resultRequest = new
+            {
+                clientKey = apikey,
+                taskId = taskId
+            };
+
+            var resultResponse = await client.PostAsync(
+                "https://api.anti-captcha.com/getTaskResult",
+                new StringContent(JObject.FromObject(resultRequest).ToString(), Encoding.UTF8, "application/json"));
+
+            result = JObject.Parse(await resultResponse.Content.ReadAsStringAsync());
+
+            Console.WriteLine("Polling... Status: " + result["status"]);
+
+        } while (result["status"].ToString() != "ready");
+		        
+        string token = result["solution"]["gRecaptchaResponse"].ToString();
+        return token;
+    }
+
 
 	public Task SimulateNavigationViaUrl(string url)
 	{
@@ -161,7 +229,7 @@ public class WebDriverClient : IDisposable, IDriverClient
 	{
 		try
 		{
-			var action = new Actions(Driver);
+			var action = new OpenQA.Selenium.Interactions.Actions(Driver);
 			action.SendKeys(keyCode).Perform();	
 			return this;
 		}

@@ -33,9 +33,9 @@ public class NavigationUiFixture : FixtureBase
         _config = config;
     }
 
-    public void The_root_page_is_opened()
+    public async Task The_root_page_is_opened()
     {       
-        _navigationPage.Open(_config.UiBaseUrl);
+        await _navigationPage.Open(_config.UiBaseUrl);
 
         _navigationPage.WaitForPageToLoad();
     }

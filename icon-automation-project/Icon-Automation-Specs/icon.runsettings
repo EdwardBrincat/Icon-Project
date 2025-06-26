@@ -5,5 +5,6 @@
 		<Parameter name="env" value="prod" />
 		<Parameter name="os" value="windows" />		
 		<Parameter name="isHeadless" value="false" />
+		<Parameter name="bypassCaptacha" value="false" />
 	</TestRunParameters>
 </RunSettings>

@@ -15,6 +15,7 @@ public class ConfigModel
     public Dictionary<string, UserTestData> TestDataApi { get; set; }
     public Dictionary<string, EverNoteTestData> TestDataUi { get; set; }
     public List<string> Cities { get; set; }
+    public AntiCaptacha AntiCaptacha { get; set; }
 }
 
 public class UserTestData
@@ -33,5 +34,12 @@ public class EverNoteTestData
     public string CorrectPassword { get; set; }
     public string InCorrectPassword { get; set; }
     public string ErrorMessage { get; set; }
+    public string NoteText { get; set; }
+}
+
+public class AntiCaptacha
+{
+    public string ApiKey { get; set; }
+    public string SiteKey { get; set; }
 }
 

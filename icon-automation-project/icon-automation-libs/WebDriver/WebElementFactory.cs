@@ -1,6 +1,7 @@
 ﻿using Icon_Automation_Libs.WebDriver.Button;
 using Icon_Automation_Libs.WebDriver.Input;
 using Icon_Automation_Libs.WebDriver.Modal;
+using Icon_Automation_Libs.WebDriver.PlaceHolder;
 using Icon_Automation_Libs.WebDriver.Text;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,4 +31,7 @@ public class WebElementFactory
 
     public ModalElementQueryBuilder CreateModalElement(string childAttributeName, string childAttributeValue)
         => ActivatorUtilities.CreateInstance<ModalElementQueryBuilder>(_serviceProvider, childAttributeName, childAttributeValue);
+
+    public PlaceHolderElementQueryBuilder CreatePlaceHolderElement(string childAttributeName, string childAttributeValue)
+        => ActivatorUtilities.CreateInstance<PlaceHolderElementQueryBuilder>(_serviceProvider, childAttributeName, childAttributeValue);
 }

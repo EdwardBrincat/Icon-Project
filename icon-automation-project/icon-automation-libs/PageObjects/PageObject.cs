@@ -10,7 +10,7 @@ namespace Icon_Automation_Libs.PageObjects;
 
 public interface IPageObject<out TPageObject>
 {
-	void Open(string baseUrl);	
+	Task Open(string baseUrl);	
 	void ChangeWindowSize(int width, int height);	
 }
 
@@ -38,9 +38,9 @@ public class PageObject<TPageObject> : IPageObject<TPageObject>
 			.WaitAndRetry(config.Retries, x => TimeSpan.FromSeconds(config.Timeout));		
 	}
 
-	public void Open(string baseUrl)
+	public async Task Open(string baseUrl)
 	{
-		Driver.Open(baseUrl);
+		await Driver.Open(baseUrl);
 	}
 	
 	public TPageObject Do(Action<TPageObject> action)

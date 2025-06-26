@@ -58,7 +58,8 @@
       "email": "umm360@gmail.com",
       "correctPassword": "@Icon2025",
       "incorrectPassword": "T35T!nG123",
-      "errorMessage": "Please verify your credentials. The password entered is incorrect."
+      "errorMessage": "Please verify your credentials. The password entered is incorrect.",
+      "noteText" :  "TestingNotes"
     }
   },
   "cities": [
@@ -81,5 +82,9 @@
     "Johannesburg, South Africa",
     "Sao Paulo, Brazil",
     "Buenos Aires, Argentina"
-  ]
+  ],
+  "antiCaptacha": {
+    "apiKey": "8250a7071f5b064e41e8ebf65ea2fa34",
+    "siteKey": "9236f198-f154-4aa9-8f4d-2e7ce9aedb5b"
+  }
 }
