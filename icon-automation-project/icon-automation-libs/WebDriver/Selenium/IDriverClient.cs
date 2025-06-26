@@ -2,6 +2,7 @@
 using Icon_Automation_Libs.Exceptions;
 using OpenQA.Selenium;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace Icon_Automation_Libs.WebDriver.Selenium;
 
@@ -48,4 +49,5 @@ public interface IDriverClient
 	string GetAttribute(By element, string attribute);
     IDriverClient ExecuteScriptWithElement(string script, By element);
     IDriverClient ExecuteScriptWithElement(string script, IWebElement element);
+    Task InterceptGetGamesResponseToSetSportsbook(string endpointUrl, string redirectUrl, bool passwordChecked);
 }

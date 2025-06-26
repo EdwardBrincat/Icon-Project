@@ -11,12 +11,14 @@ public class RunnerContext
     public string Env { get; }
     public string OperatingSystem { get; }
     public bool IsHeadless { get; }
+    public bool BypassCatpcha { get; }
 
-	public RunnerContext(RunnerSettings settings)
+    public RunnerContext(RunnerSettings settings)
     {
         Env = settings.Environment;
 		IsHeadless = settings.IsHeadless;
         OperatingSystem = settings.OperatingSystem;
+        BypassCatpcha = settings.BypassCatpcha;
 
     }
 
@@ -25,5 +27,6 @@ public class RunnerContext
 		Env = TestContext.Parameters["env"];
         OperatingSystem = TestContext.Parameters["os"];
         IsHeadless = TestContext.Parameters["isHeadless"] != null ? TestContext.Parameters["isHeadless"].ToBool() : default;
+        BypassCatpcha = TestContext.Parameters["bypassCaptacha"] != null ? TestContext.Parameters["bypassCaptacha"].ToBool() : default;
     }  	
 }

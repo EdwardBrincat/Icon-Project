@@ -36,6 +36,7 @@ public class WebDriverBrowserConfigurations
             chromeOptions.AddArgument("--headless=new");
 
         chromeOptions.PlatformName = operatingSystem;
+        chromeOptions.PageLoadStrategy = PageLoadStrategy.Normal;
         chromeOptions.AddArguments("--disable-search-engine-choice-screen");
         chromeOptions.AddArgument("--no-sandbox");
         chromeOptions.AddArgument("--disable-setuid-sandbox");

@@ -7,6 +7,7 @@ using Icon_Automation_Libs.Config.Model;
 using Icon_Automation_Libs.DependencyInjection;
 using Icon_Automation_Libs.Fixtures.Api;
 using Icon_Automation_Libs.Fixtures.UI;
+using Icon_Automation_Libs.PageObjects.Home;
 using Icon_Automation_Libs.PageObjects.Login;
 using Icon_Automation_Libs.PageObjects.Navigation;
 using Icon_Automation_Libs.Scenario;
@@ -89,6 +90,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<LoginPage>();
         services.AddScoped<NavigationPage>();
+        services.AddScoped<HomePage>();
 
         return services;
     }
@@ -96,7 +98,9 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddUiFixtures(this IServiceCollection services)
     {
         services.AddScoped<LoginUiFixture>();
+        services.AddScoped<LoginUICompositeFixture>();
         services.AddScoped<NavigationUiFixture>();
+        services.AddScoped<HomeUiFixture>();
         return services;
     }
 
