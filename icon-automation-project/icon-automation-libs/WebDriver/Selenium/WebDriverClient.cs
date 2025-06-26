@@ -1,11 +1,11 @@
-﻿using Elastic.Clients.Elasticsearch.IndexLifecycleManagement;
-using Icon_Automation_Libs.Config.Model;
+﻿using Icon_Automation_Libs.Config.Model;
 using Icon_Automation_Libs.Exceptions;
 using Icon_Automation_Libs.Runner;
 using LightBDD.Framework;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.Extensions;
 using Polly;
 using Polly.Retry;
@@ -776,5 +776,50 @@ public class WebDriverClient : IDisposable, IDriverClient
         {
             throw HandleFailureException($"Failed to execute script [{script}] for element [{element}] due to [{e.Message}]");
         }
+    }
+
+    public void InterceptCheckPasswordResponseToSetCheck()
+    {
+        string script = @"
+			const originalFetch = window.fetch;
+			window.fetch = function(input, init) {
+				if (typeof input === 'string' && input.includes('/api/checkPassword')) {
+					return Promise.resolve(new Response(JSON.stringify({
+						status: 'good' // ← change this to whatever you want
+					}), {
+						status: 200,
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					}));
+				}
+				return originalFetch(input, init);
+			};
+		";
+
+		((IJavaScriptExecutor)Driver).ExecuteScript(script);
+
+       
+
+        // Add all cookies
+        Driver.Manage().Cookies.AddCookie(new Cookie("_ga", "GA1.1.1226390038.1750658109", ".evernote.com", "/", new DateTime(2026, 7, 31, 11, 45, 6)));
+        Driver.Manage().Cookies.AddCookie(new Cookie("_ga_3EXC9WZ9CH", "GS2.1.s1750938306$o9$g0$t1750938314$j52$l0$h0", ".evernote.com", "/", new DateTime(2026, 7, 31, 11, 45, 14)));
+        Driver.Manage().Cookies.AddCookie(new Cookie("_gcl_au", "1.1.29558065.1750658108", ".evernote.com", "/", new DateTime(2025, 9, 21, 5, 55, 8)));
+        //Driver.Manage().Cookies.AddCookie(new Cookie("auth", "S=s641:U=11f328b9:E=197accb17c8:C=197ac5d3ac8:P=5fd:A=en-web:V=2:H=6405681a76247f413ea44f79598525e2", ".www.evernote.com", "/", new DateTime(2025, 6, 26, 15, 11, 23)));
+        //Driver.Manage().Cookies.AddCookie(new Cookie("clipper-sso", "S=s641:U=11f328b9:E=19f040e66ef:C=197ac5d3af1:P=1d5:A=en-chrome-clipper-xauth-new:V=2:H=51ad01359e553a6c6945659565792780", ".www.evernote.com", "/", new DateTime(2026, 6, 26, 13, 11, 23)));
+        //Driver.Manage().Cookies.AddCookie(new Cookie("cookieTestValue", "1750943479895", "www.evernote.com", "/", new DateTime(2026, 7, 31, 13, 11, 23)));
+        Driver.Manage().Cookies.AddCookie(new Cookie("evernote-local-storage-id", "3ad31a14-1138-4cdb-aaa2-487481366b70", "accounts.evernote.com", "/", new DateTime(2026, 6, 26, 13, 11, 22)));
+        Driver.Manage().Cookies.AddCookie(new Cookie("evernote-session", "ea33d3a0c164f915d2e8412fa541ce51e7a83e7b107dc60f6765fb5ad850fa06748dcb9442df1e7dec6c8cbb53b6dbb2f50fa8b2557e4dffc24f68a399fbc170.kCFTwrbtEvH0TvsTC6qp0K6ciR6rc6ZWaglVYACpRI0", "accounts.evernote.com", "/", new DateTime(2025, 7, 26, 13, 11, 23)));
+        //Driver.Manage().Cookies.AddCookie(new Cookie("JSESSIONID", "5B9840385EF4B0CC27A5D7A5E922049A", "www.evernote.com", "/", null)); // Session cookie
+        //Driver.Manage().Cookies.AddCookie(new Cookie("last-web-version-used", "Ion-on-Conduit", "www.evernote.com", "/", new DateTime(2026, 7, 31, 13, 11, 25)));
+        //Driver.Manage().Cookies.AddCookie(new Cookie("lastAuthentication", "1750943480573/2d8613a2f054c419fb752a14c88cbca627fc55d210a455596d1103218426a0cd", "www.evernote.com", "/", new DateTime(2026, 7, 31, 13, 11, 24)));
+        //Driver.Manage().Cookies.AddCookie(new Cookie("req_sec", "U=11f328b9:P=/:E=197ac6b26d9:S=e11c32c712f8a6288e50069153a671bed86fe1ff5ef50e39e2868755020b011d", "www.evernote.com", "/", new DateTime(2025, 6, 26, 13, 26, 36)));
+        Driver.Manage().Cookies.AddCookie(new Cookie("session_info", "{%22userID%22:%22Profile:USR:301148345%22%2C%22serviceLevel%22:%22PROFESSIONAL%22%2C%22segmentation%22:%22DEFAULT%22%2C%22creationDate%22:1750658238000}", ".evernote.com", "/", new DateTime(2026, 6, 26, 13, 11, 30)));
+        Driver.Manage().Cookies.AddCookie(new Cookie("userdata_accountType", "FREE", ".evernote.com", "/", new DateTime(2025, 6, 26, 15, 11, 23)));
+        Driver.Manage().Cookies.AddCookie(new Cookie("userdata_acctCreatedTime", "1750658238000", ".evernote.com", "/", new DateTime(2025, 6, 26, 15, 11, 23)));
+        Driver.Manage().Cookies.AddCookie(new Cookie("userdata_lastLoginTime", "1750943480557", ".evernote.com", "/", new DateTime(2025, 6, 26, 15, 11, 23)));
+        Driver.Manage().Cookies.AddCookie(new Cookie("userdata_loggedIn", "true", ".evernote.com", "/", new DateTime(2025, 6, 26, 15, 11, 23)));
+        Driver.Manage().Cookies.AddCookie(new Cookie("web50017PreUserGuid", "20e8f263-c339-4125-97c7-9cd1fb569b73", ".evernote.com", "/", new DateTime(2026, 6, 23, 5, 58, 6)));
+
     }
 }

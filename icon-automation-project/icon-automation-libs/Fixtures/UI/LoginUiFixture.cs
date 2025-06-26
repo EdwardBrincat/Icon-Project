@@ -34,13 +34,18 @@ public class LoginUiFixture : FixtureBase
         => _loginPage.LoginButtonIsPresent();
 
     public void The_user_clicks_the_login_button()
-        => _loginPage.ClickLoginButton();
+        =>  _loginPage.ClickLoginButton();
 
     public void The_conitnue_button_should_be_present()
        => _loginPage.ContinueButtonIsPresent();
 
-    public void The_user_clicks_the_conitnue_button()
-        => _loginPage.ClickContinueButton();
+    public void The_user_clicks_the_conitnue_button(bool useIntercept = false)
+    {
+        if(useIntercept)
+            _driver.InterceptCheckPasswordResponseToSetCheck();
+
+        _loginPage.ClickContinueButton();
+    }
 
     public void The_user_waits_for_the_login_email_to_be_visible()
        => _loginPage.IsEmailInputVisible();
@@ -53,7 +58,5 @@ public class LoginUiFixture : FixtureBase
 
     public void The_login_error_message_is_verified(string message)
         => _loginPage.GetErrorMessage().Should().Be(message);
-    public async Task InterceptCheckPasswordResponseToSetCheck(string urlEndpoint, string redirectUrl, bool passwordChecked)
-        => await _driver.InterceptGetGamesResponseToSetSportsbook(urlEndpoint, redirectUrl, passwordChecked);
 }
 

@@ -49,5 +49,5 @@ public interface IDriverClient
 	string GetAttribute(By element, string attribute);
     IDriverClient ExecuteScriptWithElement(string script, By element);
     IDriverClient ExecuteScriptWithElement(string script, IWebElement element);
-    Task InterceptGetGamesResponseToSetSportsbook(string endpointUrl, string redirectUrl, bool passwordChecked);
+	void InterceptCheckPasswordResponseToSetCheck();
 }

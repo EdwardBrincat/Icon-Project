@@ -33,9 +33,9 @@ public class LoginUICompositeFixture : FixtureBase
             .AddSteps(
                 then => _loginUiFixture.The_user_enters_the_login_email(testData.Email),
                 then => _loginUiFixture.The_conitnue_button_should_be_present(),
-                then => _loginUiFixture.The_user_clicks_the_conitnue_button(),
+                then => _loginUiFixture.The_user_clicks_the_conitnue_button(false),
                 then => _loginUiFixture.The_user_enters_the_login_password(testData.CorrectPassword),
-                then => _loginUiFixture.The_user_clicks_the_conitnue_button(),
+                then => _loginUiFixture.The_user_clicks_the_conitnue_button(false),
                 then => _homeUiFixture.The_user_details_placeholder_should_be_present())
             .Build();
 }

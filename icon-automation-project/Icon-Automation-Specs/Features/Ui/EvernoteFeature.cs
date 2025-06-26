@@ -31,9 +31,9 @@ public class EvernoteFeature : FeatureFixture
             .AddSteps(                
                 when => when.LoginUiFixture.The_user_enters_the_login_email(testData.Email),
                 then => then.LoginUiFixture.The_conitnue_button_should_be_present(),
-                then => then.LoginUiFixture.The_user_clicks_the_conitnue_button(),
+                then => then.LoginUiFixture.The_user_clicks_the_conitnue_button(false),
                 then => then.LoginUiFixture.The_user_enters_the_login_password(testData.InCorrectPassword),
-                then => then.LoginUiFixture.The_user_clicks_the_conitnue_button(),
+                then => then.LoginUiFixture.The_user_clicks_the_conitnue_button(false),
                 then => then.LoginUiFixture.The_login_error_message_is_verified(testData.ErrorMessage))
             .RunAsync();
 
